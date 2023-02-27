@@ -1,0 +1,773 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status API - Documentation</title>
+    <style>
+        #scrollup {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            width: 3rem;
+            height: 3rem;
+            background-color: rgb(30, 121, 206);
+            color: white;
+            font-size: 2em;
+            border-radius: 2rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: goup 0.3s linear 0s 1 normal;
+            cursor: pointer;
+        }
+
+        @keyframes goup {
+            from {
+                bottom: -20%;
+            }
+            to {
+                bottom: 5%;
+            }
+        }
+
+        @media screen and (orientation: portrait) {
+            pre {
+                overflow-x: scroll;
+            }
+        }
+
+        .apicall {
+            border: 1px solid rgba(90, 90, 90, 0.562);
+            padding: 0.2% 1%;
+            border-radius: 0.3rem;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        #ttl {
+            font-size: 1.3em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Status API - Documentation</h1>
+
+    <br>
+
+    <p id="ttl">POST method API calls:</p>
+
+    <div id="scrollup">
+        &uarr;
+    </div>
+
+    <div>
+        <ul>
+            <li><a href="#posts">Posts</a></li>
+            <li><a href="#comments">Post comments</a></li>
+            <li><a href="#like">Like</a></li>
+            <li><a href="#account">Account</a></li>
+            <li><a href="#profile">Profile info</a></li>
+            <li><a href="#follow">Follow</a></li>
+            <li><a href="#search">Search</a></li>
+            <li><a href="#report">Report</a></li>
+        </ul>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
+    <hr>
+    <h2 id="posts">Posts</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/addpost</h3>
+    <p>Add a post into the database.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): { // you must pass at least one of the optional arguments
+            [String] message, // optional
+            [Array] attach [ // accepts up to 3 items, optional
+                [String], // must be a base64 encoded file in png, jpg, jpeg or gif format
+                ...
+            ]
+        }
+        Response object data: {
+            [String] postid,
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/editpost</h3>
+    <p>Edit an existing post.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid,
+            [String] message
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/deletepost</h3>
+    <p>Delete an existing post.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/getpost</h3>
+    <p>Returns a post using it's postid.</p>
+    <pre>
+        Request headers: {
+            [String] username, // optional
+            [String] token, // optional
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid
+        }
+        Response object data: {
+            [Object]: {
+                [String] username,
+                [String] fullname, // can return undefined
+                [String] avatar, // returns the request URL of the file on the server, can return undefined
+                [Boolean] checkmark,
+                [Boolean] isliked, // only returns a value if the user passed valid auth data, can return undefined
+                [String] postid,
+                [String] message,
+                [Number] timestamp, // returns time the post was created in UNIX epoch format (in ms)
+                [Number] numlikes,
+                [Number] numcomments,
+                [Array] attach [ // returns up to 3 items, can return an empty array
+                    [String], // returns the request URL of the file on the server
+                    ...
+                ]
+            },
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/getallposts</h3>
+    <p>Returns all posts a user has made using their username.</p>
+    <pre>
+        Request headers: {
+            [String] username, // optional
+            [String] token, // optional
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] targetuser // username of the user whose posts will be returned
+        }
+        Response object data: {
+            [Array] posts: [ // can return an empty array
+                [Object]: {
+                    [String] username,
+                    [String] fullname, // can return undefined
+                    [String] avatar, // returns the request URL of the file on the server, can return undefined
+                    [Boolean] checkmark,
+                    [Boolean] isliked, // only returns a value if the user passed valid auth data, can return undefined
+                    [String] postid,
+                    [String] message,
+                    [Number] timestamp, // returns time the post was created in UNIX epoch format (in ms)
+                    [Number] numlikes,
+                        [Number] numcomments,
+                    [Array] attach [ // returns up to 3 items, can return an empty array
+                        [String], // returns the request URL of the file on the server
+                        ...
+                    ]
+                },
+                ...
+            ]
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        } 
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/gethomeposts</h3>
+    <p>Returns all recent posts a user should see on their home page.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Response object data: {
+            [Array] posts: [ // can return an empty array
+                [Object]: {
+                    [String] username,
+                    [String] fullname, // can return undefined
+                    [String] avatar, // returns the request URL of the file on the server, can return undefined
+                    [Boolean] checkmark,
+                    [Boolean] isliked,
+                    [String] postid,
+                    [String] message,
+                    [Number] timestamp, // returns time the post was created in UNIX epoch format (in ms)
+                    [Number] numlikes,
+                    [Number] numcomments,
+                    [Array] attach [ // returns up to 3 items, can return an empty array
+                        [String], // returns the request URL of the file on the server
+                        ...
+                    ]
+                },
+                ...
+            ]
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    
+    <hr>
+    <h2 id="comments">Post comments</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/addpostcomment</h3>
+    <p>Adds a comment onto a post.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid,
+            [String] comment
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/getpostcomments</h3>
+    <p>Returns all the comments on a post.</p>
+    <pre>
+        Request headers: {
+            [String] username, // optional
+            [String] token, // optional
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid
+        }
+        Response object data: {
+            [Array] comments [ // can return an empty array
+                {
+                    [String] username,
+                    [String] fullname, // can return undefined
+                    [String] avatar, // returns the request URL of the file on the server, can return undefined
+                    [Boolean] checkmark,
+                    [Boolean] isliked, // only returns a value if the user passed valid auth data, can return undefined
+                    [String] commentid,
+                    [String] comment,
+                    [Number] timestamp, // returns time the comment was created in UNIX epoch format (in ms)
+                    [Number] numlikes
+                },
+                ...
+            ],
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    <hr>
+    <h2 id="like">Like</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/likepost</h3>
+    <p>Likes or removes a like from a post.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid,
+            [Boolean] like // pass true to like the post, or false to remove the like
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/likecomment</h3>
+    <p>Likes or removes a like from a comment.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid,
+            [String] commentid,
+            [Boolean] like // pass true to like the comment, or false to remove the like
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    <hr>
+    <h2 id="account">Account</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/register</h3>
+    <p>Creates a new account.</p>
+    <pre>
+        Request headers: {
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] username,
+            [String] password,
+            [String] fullname, // optional
+            [String] email,
+            [String] birthdate, // must be in format "YYYY-MM-DD"
+            [String] avatar // must be a base64 encoded file in png, jpg or jpeg format, optional
+        }
+        Response object data: {
+            [String] token,
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/login</h3>
+    <p>Returns a user's token if the password is correct.</p>
+    <pre>
+        Request headers: {
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] username,
+            [String] password
+        }
+        Response object data: {
+            [String] token,
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/auth</h3>
+    <p>Checks if a user's token is valid and returns some account information.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Response object data: {
+            [Object] userinfo: {
+                [String] username,
+                    [String] fullname, // can return undefined
+                    [Boolean] checkmark,
+                    [String] avatar // returns the request URL of the file on the server, can return undefined
+            }
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/editprofile</h3>
+    <p>Changes a user's less sensitive profile data (fullname and avatar).</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): { // you must pass at least one of the optional arguments
+            [String] fullname, // optional
+            [String] avatar // must be a base64 encoded file in png, jpg or jpeg format, optional
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/editusername</h3>
+    <p>Changes a user's username.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] newusername,
+            [String] password // needed to confirm the user's authentication
+        }
+        Response object data: {
+            [String] token, // a new account token will be generated
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    
+    <br>
+
+    <div class="apicall">
+    <h3>/api/editemail</h3>
+    <p>Changes a user's email.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] newemail,
+            [String] password // needed to confirm the user's authentication
+        }
+        Response object data: {
+            [String] token,
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/editpassword</h3>
+    <p>Changes a user's password.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] newpassword,
+            [String] password // pass the old password, needed to confirm the user's authentication
+        }
+        Response object data: {
+            [String] token, // a new account token will be generated
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    <hr>
+    <h2 id="profile">Profile info</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/getprofile</h3>
+    <p>Returns the target user's profile information.</p>
+    <pre>
+        Request headers: {
+            [String] username, // optional
+            [String] token, // optional
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] targetuser
+        }
+        Response object data: {
+            [Object] profile: {
+                [String] username,
+                [String] fullname, // can return undefined
+                [String] birthdate,
+                [Boolean] checkmark,
+                [String] avatar, // returns the request URL of the file on the server, can return undefined
+                [Number] numfollowers,
+                [Number] numfollowing,
+                [Number] regtimestamp,
+                [Boolean] isfollowing // only returns a value if the user passed valid auth data, can return undefined
+            }
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/getprofilefollowers</h3>
+    <p>Returns all users that follow the target user.</p>
+    <pre>
+        Request headers: {
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] targetuser
+        }
+        Response object data: {
+            [Array] followers: [
+                {
+                    [String] username,
+                    [String] fullname, // can return undefined
+                    [Boolean] checkmark,
+                    [String] avatar // returns the request URL of the file on the server, can return undefined
+                },
+                ...
+            ]
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/getprofilefollowing</h3>
+    <p>Returns all users the target user follows.</p>
+    <pre>
+        Request headers: {
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] targetuser
+        }
+        Response object data: {
+            [Array] following: [
+                {
+                    [String] username,
+                    [String] fullname, // can return undefined
+                    [Boolean] checkmark,
+                    [String] avatar // returns the request URL of the file on the server, can return undefined
+                },
+                ...
+            ]
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    <hr>
+    <h2 id="follow">Follow</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/followuser</h3>
+    <p>Follows or unfollows the target user.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] targetuser,
+            [Boolean] follow // pass true to follow the target user, or false to unfollow
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    
+    <br>
+
+    <div class="apicall">
+    <h3>/api/removefollower</h3>
+    <p>Removes the target user from your followers list.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] targetuser
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    <hr>
+    <h2 id="search">Search</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/searchaccounts</h3>
+    <p>Returns all users that contain the search query in their username or fullname.</p>
+    <pre>
+        Request headers: {
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] query
+        }
+        Response object data: {
+            [Array] results: [ // can return an empty array
+                {
+                    [String] username,
+                    [String] fullname, // can return undefined
+                    [Boolean] checkmark,
+                    [String] avatar // returns the request URL of the file on the server, can return undefined
+                },
+                ...
+            ]
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+    <hr>
+    <h2 id="report">Report</h2>
+    <hr>
+    <div class="apicall">
+    <h3>/api/accountreport</h3>
+    <p>Adds a report for another user's account.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] username, // pass the username of the account to report
+            [String] message // pass the report reason
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/postreport</h3>
+    <p>Adds a report for a post.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid, // pass the postid of the post to report
+            [String] message // pass the report reason
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/commentreport</h3>
+    <p>Adds a report for a comment.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] postid, // pass the postid of the post where the comment is written
+            [String] commentid, // pass the commentid of the comment to report
+            [String] message // pass the report reason
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+    <br>
+
+    <div class="apicall">
+    <h3>/api/bugreport</h3>
+    <p>Adds a bug report.</p>
+    <pre>
+        Request headers: {
+            [String] username,
+            [String] token,
+            'Content-Type': 'application/json'
+        }
+        Request parameters (body): {
+            [String] category, // must be one of these values: 'homepage', 'profile', 'settings', 'other'
+            [String] message // pass the bug description
+        }
+        Response object data: {
+            [Number/String] error // returns a string when there was an error or undefined otherwise
+        }
+    </pre>
+    </div>
+
+
+
+    <script>
+        let shown = false;
+        document.addEventListener("scroll", () => {
+            if (!shown && document.body.scrollTop > 100) {
+                document.getElementById("scrollup").style.display = "flex";
+                shown = true;
+            }
+            else if (shown && document.body.scrollTop <= 100) {
+                document.getElementById("scrollup").style.display = "none";
+                shown = false;
+            }
+        });
+
+        document.getElementById("scrollup").addEventListener("click", () => {
+            window.scrollTo(0, 0);
+        });
+    </script>
+</body>
+</html>
