@@ -26,7 +26,7 @@ It also has a partial support for:
 - Every response is also sent back in the JSON format.  
 - All data is saved onto the cloud database except user avatars and post attachments. They are saved into the '/public' folder.  
 
-The documentation is available on: 
+The documentation is available on: https://ivant04.github.io/status-backend/docs.html
 
 
 ## Setting up
