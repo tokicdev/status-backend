@@ -1,15 +1,22 @@
 {
-  "name": "reactnode",
+  "name": "status-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Status - Backend API server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "build": "npm install"
   },
   "keywords": [],
-  "author": "Toxic48",
-  "license": "ISC",
+  "author": {
+    "name": "ivant04",
+    "email": "77108700+ivant04@users.noreply.github.com"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/ivant04/status-backend.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
