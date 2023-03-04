@@ -24,6 +24,7 @@ It also has a partial support for:
 All API calls in this app go through the "post" request method.  
 Every request must have a header 'Content-Type' set to 'application/json', and every request's body must be sent in the JSON format.  
 Every response is also sent back in the JSON format.  
+All data is saved onto the cloud database except user avatars and post attachments. They are saved into the '/public' folder.
 
 The documentation is available on: 
 
