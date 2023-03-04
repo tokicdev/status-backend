@@ -9,6 +9,7 @@ This API currently contains full support for:
 - Creating accounts (register and login)
 - Publishing posts (with image attachments)
 - Publishing comments under posts
+- Liking posts and comments
 - Following users
 - Searching through accounts
 - Showing other profiles (accounts)
