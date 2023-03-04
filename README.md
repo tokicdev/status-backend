@@ -1,8 +1,8 @@
 # Status Backend API
 
-> Status is a social media project that is built in React (frontend) and Node.js (backend).
-> It also uses a NOSQL cloud database - MongoDB.
-> This repository contains the backend part of the code.
+> Status is a social media project that is built in React (frontend) and Node.js (backend).  
+> It also uses a NOSQL cloud database - MongoDB.  
+> This repository contains the backend part of the code.  
 
 This API currently contains full support for:
 - Creating accounts (register and login)
