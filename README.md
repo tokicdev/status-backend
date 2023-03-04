@@ -34,6 +34,6 @@ If you want to run this code you need to:
 - Save the code into a folder on your computer
 - Install Node.js (v16 or newer)
 - Run "npm install" inside the folder where you saved the code
-- Create a MongoDB cluster (https://www.mongodb.com/)
+- Create a MongoDB cluster (https://www.mongodb.com/) and set up Network access IP
 - Add the MongoDB cluster access credentials into the .env file
 - Run the server with "npm start"
